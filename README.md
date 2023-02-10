@@ -8,6 +8,8 @@ embed.FS always returns a zero value of time.Time for ModTime(), so the Last-Mod
 
 This package can be avoid this with user specific ModTime.
 
+The file in original fs.FS must implement io.Seeker to use with http.FileServer.
+
 ## Example
 
 ```go

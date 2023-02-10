@@ -1,6 +1,7 @@
 // Package modtimefs wraps fs.FS with fake ModTime.
 // embed.FS always returns a zero value of time.Time for ModTime(), so the Last-Modified is not added to the response header when embed.FS is used with http.FileServer and http.FS.
 // This package can be avoid this with user specific ModTime.
+// The file in original fs.FS must implement io.Seeker to use with http.FileServer.
 package modtimefs
 
 import (
@@ -10,7 +11,7 @@ import (
 	"time"
 )
 
-var errNotSeeker = errors.New("file does not implements io.Seeker")
+var errNotSeeker = errors.New("file does not implement io.Seeker")
 
 // NewFn takes a original fs.FS and a function for spoofing ModTime, and returns a wrapped fs.FS.
 func NewFn(fsys fs.FS, modTimeFn func() time.Time) fs.FS {
