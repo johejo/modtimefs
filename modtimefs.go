@@ -6,7 +6,6 @@ package modtimefs
 
 import (
 	"errors"
-	"io"
 	"io/fs"
 	"time"
 )
@@ -33,25 +32,16 @@ func (fsys modTimeFS) Open(name string) (fs.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	sf, ok := f.(seekerFile)
-	if !ok {
-		return nil, errNotSeeker
-	}
-	return modTimeFile{seekerFile: sf, modTimeFn: fsys.modTimeFn}, nil
-}
-
-type seekerFile interface {
-	fs.File
-	io.Seeker
+	return modTimeFile{File: f, modTimeFn: fsys.modTimeFn}, nil
 }
 
 type modTimeFile struct {
-	seekerFile
+	fs.File
 	modTimeFn func() time.Time
 }
 
 func (f modTimeFile) Stat() (fs.FileInfo, error) {
-	fi, err := f.seekerFile.Stat()
+	fi, err := f.File.Stat()
 	if err != nil {
 		return nil, err
 	}
