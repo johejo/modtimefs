@@ -5,12 +5,9 @@
 package modtimefs
 
 import (
-	"errors"
 	"io/fs"
 	"time"
 )
-
-var errNotSeeker = errors.New("file does not implement io.Seeker")
 
 // NewFn takes a original fs.FS and a function for spoofing ModTime, and returns a wrapped fs.FS.
 func NewFn(fsys fs.FS, modTimeFn func() time.Time) fs.FS {
